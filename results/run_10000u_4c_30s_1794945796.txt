@@ -1,0 +1,94 @@
+Reddit engine simulation report
+===============================
+
+Configuration
+-------------
+users          10000
+clients        4
+subs           100
+zipf_s         1.5
+subs_per_user  3
+duration       30
+think_ms       1000
+online_ms      20000
+offline_ms     10000
+stagger_ms     3000
+repost         0.1
+push_posts     false
+workers        16
+feed_limit     25
+seed           42
+client_nodes   client4_1382@DESKTOP-610EG6G, client1_1158@DESKTOP-610EG6G, client3_1318@DESKTOP-610EG6G, client2_1222@DESKTOP-610EG6G
+engine_node    'engine@DESKTOP-610EG6G' (OTP 29, 8 schedulers)
+
+Setup
+-----
+clients say hello 1 ms, register users+subs 255 ms, join subs 624 ms
+
+Throughput (run phase)
+----------------------
+wall time                30.3 s
+client requests          257352  (8491 req/s)
+engine requests handled  264008  (8710 req/s)
+user actions             192332
+
+Latency per operation (client round trip; engine = service time)
+----------------------------------------------------------------
+op              count    avg us      p50      p95      p99       max  engine us
+connect         16310      1757      601     2223    37829    222823        5.1
+disconnect       9654      2455      635     5945    57715    241255        2.8
+post            17217      2495      670     5458    61949    197017       60.4
+repost           1879      2117      670     4386    50521    167322       53.8
+comment         34202      2428      683     5173    59658    223334       34.3
+vote            57252      2452      651     5352    59308    242586       10.1
+get_feed        55571      2389      867     4023    53609    243303      269.9
+get_post        15492      2527      693     5197    60311    238490       45.5
+send_dm          7729      2486      684     4804    60160    211149       26.8
+reply_dm         6436      1333      505     2959    24092    176435       25.8
+get_dms         27827      1451      512     2218    28915    189235       10.6
+get_karma        3821      2347      642     5731    56231    188621        2.5
+join_sub         2425      2350      636     4206    65054    238899       16.5
+leave_sub        1537      2221      670     4344    55099    186368       19.3
+ALL            257352      2257      701     4001    54399    243303
+
+Errors returned to clients
+--------------------------
+none
+
+Live connections
+----------------
+connects 16310, disconnects 16310, avg time online 64.0%
+pushes received: dm 10366, reply 22313, new_post 0
+pushes sent by engine: dm 10369, reply 22314, new_post 0
+
+Engine content at end of run
+----------------------------
+users 10000, subreddits 100, memberships 30025
+posts 19096 (reposts 1879 = 9.8%), comments 34202 (max depth 6), votes 51758, dms 14165
+users still marked online 0
+
+Zipf check: subreddit members and posts by rank
+-----------------------------------------------
+fitted exponent: members 1.44, posts 1.88 (configured s = 1.50)
+rank   sub        members ideal M1/k^     posts   reposts
+1      r_1           7390        7390     11404      1127
+2      r_2           4511        2613      3148       305
+3      r_3           2993        1422      1461       145
+4      r_4           2064         924       695        77
+5      r_5           1453         661       470        47
+6      r_6           1162         503       320        30
+7      r_7            827         399       221        21
+8      r_8            771         327       179        13
+9      r_9            646         274       115        11
+10     r_10           584         234       111        17
+20     r_20           225          83        23         4
+30     r_30           126          45         9         1
+50     r_50            47          21        16         0
+75     r_75            17          11         2         0
+100    r_100           14           7         0         0
+
+Resources
+---------
+engine node memory 91.7 MB (ETS tables 42.8 MB), processes 74
+client nodes memory 175.7 MB total
+simulated users finished 10000, crashed 0

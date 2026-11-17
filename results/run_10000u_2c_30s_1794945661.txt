@@ -1,0 +1,94 @@
+Reddit engine simulation report
+===============================
+
+Configuration
+-------------
+users          10000
+clients        2
+subs           100
+zipf_s         1.0
+subs_per_user  3
+duration       30
+think_ms       1000
+online_ms      20000
+offline_ms     10000
+stagger_ms     3000
+repost         0.1
+push_posts     false
+workers        16
+feed_limit     25
+seed           42
+client_nodes   client2_1225@DESKTOP-610EG6G, client1_1161@DESKTOP-610EG6G
+engine_node    'engine@DESKTOP-610EG6G' (OTP 29, 8 schedulers)
+
+Setup
+-----
+clients say hello 0 ms, register users+subs 379 ms, join subs 1454 ms
+
+Throughput (run phase)
+----------------------
+wall time                30.4 s
+client requests          256914  (8460 req/s)
+engine requests handled  263461  (8675 req/s)
+user actions             191917
+
+Latency per operation (client round trip; engine = service time)
+----------------------------------------------------------------
+op              count    avg us      p50      p95      p99       max  engine us
+connect         16321      1176      723     3487    13121    280576        5.4
+disconnect       9774       951      657     1936     5348    281907        3.0
+post            17242       922      700     1933     4790    287232       22.7
+repost           1822      1043      705     1957     6621    276685       27.0
+comment         34197       873      715     1947     5096    283853       24.2
+vote            56969       873      674     1922     5392    288461       10.6
+get_feed        55628      1231      919     2701     9486    285594      226.4
+get_post        15449       913      715     1954     4448    281600       38.1
+send_dm          7654       914      700     1919     5281    287744       21.7
+reply_dm         6260       655      506     1431     2861    286106       23.4
+get_dms         27861       945      659     2488    11476    287744        9.1
+get_karma        3744       930      681     1942     6390    281088        3.3
+join_sub         2467       836      676     1865     3849    268391       21.0
+leave_sub        1526       759      687     1917     4026     15360       17.1
+ALL            256914       983      741     2026     7631    288461
+
+Errors returned to clients
+--------------------------
+none
+
+Live connections
+----------------
+connects 16321, disconnects 16321, avg time online 63.8%
+pushes received: dm 10137, reply 21915, new_post 0
+pushes sent by engine: dm 10138, reply 21919, new_post 0
+
+Engine content at end of run
+----------------------------
+users 10000, subreddits 100, memberships 30675
+posts 19064 (reposts 1822 = 9.6%), comments 34197 (max depth 6), votes 51065, dms 13914
+users still marked online 0
+
+Zipf check: subreddit members and posts by rank
+-----------------------------------------------
+fitted exponent: members 0.97, posts 1.46 (configured s = 1.00)
+rank   sub        members ideal M1/k^     posts   reposts
+1      r_1           4563        4563      6665       636
+2      r_2           2777        2282      2820       277
+3      r_3           2017        1521      1635       167
+4      r_4           1498        1141      1051       102
+5      r_5           1168         913       704        58
+6      r_6            979         761       557        57
+7      r_7            876         652       460        44
+8      r_8            819         570       384        30
+9      r_9            672         507       391        33
+10     r_10           590         456       302        24
+20     r_20           317         228       103        12
+30     r_30           200         152        56         3
+50     r_50           134          91        21         4
+75     r_75           114          61        24         0
+100    r_100           72          46        13         0
+
+Resources
+---------
+engine node memory 91.9 MB (ETS tables 42.7 MB), processes 70
+client nodes memory 94.1 MB total
+simulated users finished 10000, crashed 0

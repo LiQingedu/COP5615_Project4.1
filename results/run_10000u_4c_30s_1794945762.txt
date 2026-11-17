@@ -1,0 +1,94 @@
+Reddit engine simulation report
+===============================
+
+Configuration
+-------------
+users          10000
+clients        4
+subs           100
+zipf_s         1.0
+subs_per_user  3
+duration       30
+think_ms       1000
+online_ms      20000
+offline_ms     10000
+stagger_ms     3000
+repost         0.1
+push_posts     true
+workers        16
+feed_limit     25
+seed           42
+client_nodes   client3_1320@DESKTOP-610EG6G, client1_1160@DESKTOP-610EG6G, client4_1384@DESKTOP-610EG6G, client2_1224@DESKTOP-610EG6G
+engine_node    'engine@DESKTOP-610EG6G' (OTP 29, 8 schedulers)
+
+Setup
+-----
+clients say hello 1 ms, register users+subs 229 ms, join subs 696 ms
+
+Throughput (run phase)
+----------------------
+wall time                30.6 s
+client requests          211092  (6898 req/s)
+engine requests handled  217678  (7113 req/s)
+user actions             149290
+
+Latency per operation (client round trip; engine = service time)
+----------------------------------------------------------------
+op              count    avg us      p50      p95      p99       max  engine us
+connect         15952    161278    38766   806265  1021126   1250714       63.0
+disconnect       9366    272148   207393   912349  1038582   1228492       52.3
+post            13381    241614   172477   875702  1036608   1242624      706.3
+repost           1439    240859   170973   877631  1036462   1208115      591.6
+comment         26747    243842   174133   876379  1034877   1253581      272.9
+vote            44541    242616   172250   878299  1035158   1239859      130.5
+get_feed        46249    214186   127270   855370  1030539   1259622     6670.8
+get_post        11962    237807   167635   872096  1033214   1247641      217.9
+send_dm          5912    240711   167139   883708  1035649   1223270      221.7
+reply_dm         4580    238439   161557   878331  1033500   1259418      286.1
+get_dms         24916    173198    73471   794846  1020267   1240371       82.0
+get_karma        2931    252685   183173   893046  1045571   1224090       24.5
+join_sub         1929    235839   161715   873556  1043531   1216614      371.0
+leave_sub        1187    254584   185060   891145  1028676   1170330      332.8
+ALL            211092    223166   141872   863453  1032355   1259622
+
+Errors returned to clients
+--------------------------
+none
+
+Live connections
+----------------
+connects 15952, disconnects 15952, avg time online 64.8%
+pushes received: dm 7342, reply 19040, new_post 23660798
+pushes sent by engine: dm 7448, reply 19171, new_post 23980326
+
+Engine content at end of run
+----------------------------
+users 10000, subreddits 100, memberships 30548
+posts 14820 (reposts 1439 = 9.7%), comments 26747 (max depth 6), votes 41535, dms 10492
+users still marked online 0
+
+Zipf check: subreddit members and posts by rank
+-----------------------------------------------
+fitted exponent: members 0.97, posts 1.44 (configured s = 1.00)
+rank   sub        members ideal M1/k^     posts   reposts
+1      r_1           4568        4568      5221       519
+2      r_2           2770        2284      2125       213
+3      r_3           2019        1523      1292       126
+4      r_4           1500        1142       818        77
+5      r_5           1142         914       525        49
+6      r_6            980         761       442        45
+7      r_7            860         653       372        38
+8      r_8            807         571       331        25
+9      r_9            671         508       301        24
+10     r_10           591         457       235        21
+20     r_20           316         228        88        10
+30     r_30           200         152        38         2
+50     r_50           132          91        14         1
+75     r_75           113          61        19         1
+100    r_100           73          46        11         0
+
+Resources
+---------
+engine node memory 84.0 MB (ETS tables 35.6 MB), processes 74
+client nodes memory 256.6 MB total
+simulated users finished 10000, crashed 0
