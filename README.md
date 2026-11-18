@@ -1,5 +1,5 @@
 # COP5615_Project4.1
-Team members: Qing Li (16912349)
+Team members: Qing Li (16912349) Yingzhu Chen(83945095)
 
 A Reddit clone engine and a client tester/simulator, written in Erlang/OTP
 (part I: engine + simulator, no REST/WebSocket layer yet). Performance
